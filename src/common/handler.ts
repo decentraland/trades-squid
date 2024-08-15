@@ -103,7 +103,7 @@ export function getDataHandler(marketplaceAbi: OffchainMarketplaceAbi, marketpla
 
     for (const block of ctx.blocks) {
       const timestamp = BigInt(block.header.timestamp)
-      notifyTimestamp = timestamp > notifyTimestamp ? timestamp : notifyTimestamp
+      notifyTimestamp = timestamp
       for (const log of block.logs) {
         const topic = log.topics[0]
         switch (topic) {

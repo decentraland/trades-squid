@@ -11,6 +11,13 @@ DB_NAME=$SQUID_DB_NAME
 DB_HOST=$SQUID_DB_HOST
 DB_PORT=$SQUID_DB_PORT
 
+DB_USER=trades_squid_writer
+DB_PASSWORD=jT8DDd73WYuf9kygKVtn
+DB_NAME=dapps
+DB_HOST=localhost
+DB_PORT=8020
+SQUID_READER_USER=dapps_marketplace_user
+
 # Generate a unique schema name and user credentials using a timestamp
 CURRENT_TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 NEW_SCHEMA_NAME="trades_squid_${CURRENT_TIMESTAMP}"

@@ -1,6 +1,5 @@
 import { Store } from '@subsquid/typeorm-store'
 import { EntityManager } from 'typeorm'
-import { Event } from '@dcl/schemas'
 import { Trade as SquidTrade, TradeStatus } from '../../model'
 import eventPublisher from './event_publisher'
 
@@ -37,11 +36,8 @@ export async function sendEvents(store: Store, modifiedTrades: SquidTrade[], tim
       )
     ).filter(Boolean)
 
-    await Promise.all(
-      events.map((event: Event) => {
-        eventPublisher.publishMessage(event)
-      })
-    )
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    await Promise.all(events.map(eventPublisher.publishMessage))
 
     await setLastNotified(store, timestamp)
   } catch (e) {
