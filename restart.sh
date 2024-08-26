@@ -5,15 +5,9 @@ if [ -f .env ]; then
   export $(grep -v '^#' .env | xargs)
 fi
 
-DB_USER=$TRADES_SQUID_DB_USER
-DB_PASSWORD=$TRADES_SQUID_DB_PASSWORD
-DB_NAME=$SQUID_DB_NAME
-DB_HOST=$SQUID_DB_HOST
-DB_PORT=$SQUID_DB_PORT
-
 SQUID_TIMESTAMP=$1
-SQUID_SCHEMA="trades_squid_${SQUID_TIMESTAMP}"
-SQUID_DB_USER="trades_squid_user_${SQUID_TIMESTAMP}"
+SQUID_SCHEMA="trades_squid_$SQUID_TIMESTAMP"
+SQUID_DB_USER="trades_squid_user_$SQUID_TIMESTAMP"
 
 # Check if required environment variables are set
 if [ -z "$DB_USER" ] || [ -z "$DB_NAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PORT" ]; then
@@ -21,17 +15,6 @@ if [ -z "$DB_USER" ] || [ -z "$DB_NAME" ] || [ -z "$DB_PASSWORD" ] || [ -z "$DB_
   echo "Ensure DB_USER, DB_NAME, DB_PASSWORD, DB_HOST, and DB_PORT are set."
   exit 1
 fi
-
-# Set PGPASSWORD to handle password prompt
-export PGPASSWORD=$DB_PASSWORD
-
-# Connect to the database and make sure the search path is set correctly
-psql -v ON_ERROR_STOP=1 --username "$DB_USER" --dbname "$DB_NAME" --host "$DB_HOST" --port "$DB_PORT" <<-EOSQL
-  ALTER USER $SQUID_DB_USER SET search_path TO $SQUID_SCHEMA;
-EOSQL
-
-# Unset PGPASSWORD
-unset PGPASSWORD
 
 # Construct the DB_URL with the new user
 export DB_URL=postgresql://$SQUID_DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
